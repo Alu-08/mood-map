@@ -1,0 +1,7 @@
+{
+  "name": "mood-map",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
