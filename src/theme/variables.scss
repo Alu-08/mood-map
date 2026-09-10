@@ -1,2 +1,21 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+:root {
+  /* Colores MoodMap */
+  --mood-bg-cream: #FAF8ED;
+  --mood-card-bg: #FCFBF5;
+  --mood-border-color: #A9B0C0;
+  
+  --mood-yellow-primary: #E2EC31;
+  --mood-yellow-tag: #F4E793;
+  --mood-purple-primary: #8E32D9;
+  --mood-blue-accent: #788AA8;
+  --mood-blue-dark: #2A3656;
+  
+  --mood-text-dark: #333333;
+  --mood-text-muted: #727988;
+  
+  /* Sobrescribir fondo por defecto de Ionic */
+  --ion-background-color: var(--mood-bg-cream);
+  --ion-font-family: 'Poppins', sans-serif;
+}

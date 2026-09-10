@@ -35,3 +35,161 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* --- RESET DE TEXTOS Y FUENTES --- */
+body, ion-content, p, span, h1, h2, h3, h4, label, input, textarea {
+  color: var(--mood-text-dark) !important;
+  font-family: 'Poppins', -apple-system, Roboto, sans-serif;
+}
+
+.title-serif {
+  font-family: 'Playfair Display', Georgia, serif !important;
+  color: #556585 !important;
+  font-weight: 600;
+}
+
+/* --- HEADER Y NAVEGACIÓN --- */
+ion-header.mood-header {
+  --background: var(--mood-bg-cream);
+  --border-color: rgba(169, 176, 192, 0.4);
+  box-shadow: none;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 12px;
+    width: 100%;
+
+    .logo-container {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 50%;
+      background: #F2EFE0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: #333333;
+      border: 1px solid #D1CDBC;
+      line-height: 1;
+    }
+  }
+}
+
+/* --- TARJETAS --- */
+.mood-card {
+  background-color: var(--mood-card-bg);
+  border: 1.5px solid var(--mood-border-color);
+  border-radius: 20px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+/* --- TEXTAREAS E INPUTS --- */
+.mood-textarea {
+  background: #F4F3ED;
+  border: 1.5px solid var(--mood-border-color);
+  border-radius: 14px;
+  padding: 12px;
+  width: 100%;
+  min-height: 80px;
+  color: #333333 !important;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.mood-input {
+  --background: #ffffff;
+  --color: #333333;
+  --placeholder-color: #727988;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  border: 1.5px solid var(--mood-border-color);
+  border-radius: 18px;
+  min-height: 42px;
+  margin-top: 4px;
+}
+
+/* --- CHIPS Y TAGS --- */
+.mood-chip-container {
+  display: flex;
+  flex-wrap: wrap; /* Evita que se amontonen si hay muchos */
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.mood-chip {
+  background-color: var(--mood-yellow-tag);
+  border: 1px solid var(--mood-border-color);
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #333333 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* --- CAJAS DE SUBIDA DE FOTO --- */
+.upload-box {
+  border: 1.5px solid var(--mood-border-color);
+  border-radius: 14px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  font-size: 30px;
+  color: #333333;
+}
+
+/* --- BOTONES --- */
+.btn-yellow {
+  --background: var(--mood-yellow-primary);
+  --color: #000000 !important;
+  --border-radius: 18px;
+  font-weight: 600;
+  font-family: 'Playfair Display', Georgia, serif;
+  text-transform: none;
+  margin-top: 8px;
+  height: 44px;
+}
+
+.btn-purple {
+  --background: var(--mood-purple-primary);
+  --color: #ffffff !important;
+  --border-radius: 18px;
+  font-weight: 600;
+  font-family: 'Playfair Display', Georgia, serif;
+  text-transform: none;
+  margin-top: 8px;
+  height: 44px;
+}
+.card-image-container {
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+  img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+}

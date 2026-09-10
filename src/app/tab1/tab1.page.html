@@ -1,17 +1,75 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
+<ion-header class="mood-header ion-no-border">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo-box">
+      <img src="assets/images/moodmap_logo.png" alt="MoodMap Logo" class="logo-img" />
+    </div>
+
+    <!-- Buscador -->
+    <div class="search-box">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input type="text" placeholder="¿Qué mood buscás hoy?" class="search-input" />
+    </div>
+
+    <!-- Perfil -->
+    <div class="profile-avatar">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding custom-content">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- Filtros Rápidos (Chips Superiores) -->
+  <div class="filter-scroll">
+    <div class="filter-chip">💼 Trabajo</div>
+    <div class="filter-chip">📖 Lectura</div>
+    <div class="filter-chip">🤫 Silencioso</div>
+    <div class="filter-chip">🎵 Música</div>
+  </div>
+
+  <!-- Tarjeta 1: Entre Voces -->
+  <div class="place-card">
+    <div class="place-image-wrapper">
+      <img src="assets/images/entre_voces.png" alt="Entre Voces Café Bar" />
+    </div>
+    
+    <div class="place-content">
+      <h2 class="title-serif">Entre Voces</h2>
+      
+      <div class="tags-row">
+        <span class="mood-chip">🔊 Ruidoso</span>
+        <span class="mood-chip">👥 Mucha gente</span>
+        <span class="mood-chip">🌓 Luz neutra</span>
+        <button class="btn-review">Ver Reseñas</button>
+      </div>
+
+      <p class="description-text">
+        El lugar tiene mucha personalidad, tiene una estética rockera. Mucha..
+      </p>
+    </div>
+  </div>
+
+  <!-- Tarjeta 2: Rincón de Coffee -->
+  <div class="place-card">
+    <div class="place-image-wrapper">
+      <img src="assets/images/rincon_de_coffee.png" alt="Rincón de Coffee" />
+    </div>
+    
+    <div class="place-content">
+      <h2 class="title-serif">Rincón de Coffee</h2>
+      
+      <div class="tags-row">
+        <span class="mood-chip">👤 Poca gente</span>
+        <span class="mood-chip">🌿 Naturaleza</span>
+        <span class="mood-chip">☀️ Luz natural</span>
+        <button class="btn-review">Ver Reseñas</button>
+      </div>
+
+      <p class="description-text">
+        Super tranquilo y con mucha luz natural. Va poca gente y su café es...
+      </p>
+    </div>
+  </div>
+
 </ion-content>
