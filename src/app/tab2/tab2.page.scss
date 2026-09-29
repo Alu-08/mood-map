@@ -1,0 +1,223 @@
+.map-content {
+  --background: #FAF8EE;
+}
+
+.mood-header {
+  --background: #FAF8EE;
+  padding: 12px 16px 8px 16px;
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .logo-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid #E1DEC8;
+    flex-shrink: 0;
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1.5px solid #C0C8D6;
+    border-radius: 25px;
+    padding: 6px 14px;
+    gap: 8px;
+
+    .search-icon {
+      font-size: 20px;
+      color: #9299A8;
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      font-size: 14px;
+      color: #333333;
+
+      &::placeholder {
+        color: #A0A7B5;
+      }
+    }
+  }
+
+  .profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #8998B5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+}
+
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 120px);
+
+  #map {
+    width: 100%;
+    height: 100%;
+    background-color: #e5e3df;
+  }
+}
+
+/* --- ESTILOS DE MARCADORES PERSONALIZADOS EN LEAFLET --- */
+::ng-deep {
+  .custom-pin-highlight {
+    background: transparent !important;
+    border: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+
+    .avatar-circle {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      border: 3px solid #7887A8;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      background: #ffffff;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .pin-card {
+      background: #7887A8;
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: -6px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+
+      h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0;
+        white-space: nowrap;
+      }
+
+      p {
+        font-size: 10px;
+        margin: 2px 0 0 0;
+        opacity: 0.9;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .custom-pin-label {
+    background: #7887A8 !important;
+    color: #ffffff !important;
+    padding: 4px 10px !important;
+    border-radius: 10px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* --- CONTROLES FLOTANTES DEL MAPA --- */
+.map-controls {
+  position: absolute;
+  bottom: 24px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  z-index: 1000;
+
+  .zoom-controls {
+    background: #ffffff;
+    border: 1px solid #C5CBD6;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    .zoom-btn {
+      background: transparent;
+      border: none;
+      width: 38px;
+      height: 38px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:active {
+        background: #f0f0f0;
+      }
+    }
+
+    .zoom-divider {
+      height: 1px;
+      background: #E0E0E0;
+      width: 100%;
+    }
+  }
+
+  .location-btn {
+    background: #ffffff;
+    border: 1.5px solid #2C2C2C;
+    border-radius: 14px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 18px;
+      color: #2C2C2C;
+    }
+
+    span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #2C2C2C;
+    }
+  }
+}

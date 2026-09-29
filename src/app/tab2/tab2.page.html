@@ -1,17 +1,40 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
+<ion-header class="mood-header ion-no-border">
+  <div class="header-container">
+    <!-- Logo -->
+    <div class="logo-box">
+      <img src="assets/images/moodmap_logo.png" alt="MoodMap Logo" class="logo-img" />
+    </div>
+
+    <!-- Buscador -->
+    <div class="search-box">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <input type="text" placeholder="¿Qué mood buscás hoy?" class="search-input" />
+    </div>
+
+    <!-- Perfil -->
+    <div class="profile-avatar">
+      <ion-icon name="person-outline"></ion-icon>
+    </div>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="map-content" [fullscreen]="true">
+  <div class="map-wrapper">
+    <!-- Contenedor donde se renderiza Leaflet -->
+    <div id="map"></div>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+    <!-- Controles Flotantes (Zoom y Mi Ubicación) -->
+    <div class="map-controls">
+      <div class="zoom-controls">
+        <button class="zoom-btn" (click)="zoomIn()">+</button>
+        <div class="zoom-divider"></div>
+        <button class="zoom-btn" (click)="zoomOut()">−</button>
+      </div>
+
+      <button class="location-btn" (click)="centerOnCipolletti()">
+        <ion-icon name="locate-outline"></ion-icon>
+        <span>Mi Ubicación</span>
+      </button>
+    </div>
+  </div>
 </ion-content>
