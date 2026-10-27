@@ -1,102 +1,172 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IonHeader, IonContent, IonIcon } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { searchOutline, personOutline, locateOutline } from 'ionicons/icons';
+import { searchOutline, personOutline, locationOutline, star } from 'ionicons/icons';
 import * as L from 'leaflet';
+import { Place, PlacesService } from '../services/places.service';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonContent, IonIcon]
+  imports: [CommonModule, FormsModule, IonHeader, IonContent, IonIcon]
 })
-export class Tab2Page implements AfterViewInit {
-  private map!: L.Map;
+export class Tab2Page {
+  private placesService = inject(PlacesService);
+  private ngZone = inject(NgZone);
+  private cdr = inject(ChangeDetectorRef);
+  private router = inject(Router);
+
+  public searchText = '';
+  public selectedPlace: Place | null = null;
+
+  private map?: L.Map;
+  private markersLayer = L.layerGroup();
+  private markers = new Map<number, L.Marker>();
+  private coords = new Map<number, { lat: number; lng: number }>();
 
   constructor() {
-    addIcons({ searchOutline, personOutline, locateOutline });
+    addIcons({ searchOutline, personOutline, locationOutline, star });
   }
 
-  ngAfterViewInit() {
-    this.initMap();
+  // Lleva a la pantalla de inicio de sesión (tab 3)
+  goToLogin() {
+    this.router.navigateByUrl('/tabs/tab3');
   }
 
-  private initMap(): void {
-    // Coordenadas del centro de Cipolletti
-    const cipollettiCoords: L.LatLngExpression = [-38.9398, -67.9928];
+  // Se ejecuta cada vez que entrás a la tab
+  ionViewDidEnter() {
+    if (!this.map) {
+      this.initMap();
+    }
+    this.map!.invalidateSize();
+  }
 
-    // Inicializar mapa sin controles de zoom por defecto (usamos los personalizados)
-    this.map = L.map('map', {
-      zoomControl: false
-    }).setView(cipollettiCoords, 15);
+  private initMap() {
+    this.map = L.map('map', { zoomControl: false }).setView([-38.9335, -67.9900], 15);
+    L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-    // Cargar mapa visual tipo OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    // Agregar cafeterías reales de Cipolletti
-    this.addRealPlaces();
-
-    // Forzar redibujado para evitar áreas grises
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 500);
+    this.markersLayer.addTo(this.map);
+    this.loadCoords();
   }
 
-  private addRealPlaces() {
-    // 1. Cafetería Destacada con foto estilo MoodMap
-    const featuredIcon = L.divIcon({
-      className: 'custom-pin-highlight',
-      html: `
-        <div class="avatar-circle">
-          <img src="assets/images/rincon_de_coffee.png" alt="Rincón de Coffee" />
-        </div>
-        <div class="pin-card">
-          <h3>Rincón de Coffee</h3>
-          <p>Música Lo-Fi, Poca Gente</p>
-        </div>
-      `,
-      iconSize: [160, 100],
-      iconAnchor: [80, 50]
+  // Busca la ubicación de cada lugar y va dibujando los pines
+  private async loadCoords() {
+    for (const place of this.placesService.places) {
+      const c = await this.placesService.getCoords(place);
+      if (c) {
+        this.coords.set(place.id, c);
+        this.renderMarkers();
+      } else {
+        console.warn('No se encontró ubicación para:', place.name, '-', place.address);
+      }
+    }
+
+    if (this.coords.size > 0) {
+      const points = Array.from(this.coords.values()).map(c => [c.lat, c.lng] as [number, number]);
+      this.map?.fitBounds(L.latLngBounds(points), { padding: [60, 60] });
+    }
+  }
+
+  // Arma el ícono de un pin (amarillo si está seleccionado)
+  private buildIcon(place: Place, selected: boolean): L.DivIcon {
+    const emoji = this.placesService.emojiByType[place.categoryType];
+    return L.divIcon({
+      className: 'mm-marker',
+      html: `<div class="mm-wrap ${selected ? 'mm-active' : ''}">
+               <div class="mm-pin"><span>${emoji}</span></div>
+               <div class="mm-name">${place.name}</div>
+             </div>`,
+      iconSize: [140, 80],
+      iconAnchor: [70, 48]
     });
+  }
 
-    // Ubicación cerca del centro (Roca y España aprox.)
-    L.marker([-38.9395, -67.9915], { icon: featuredIcon }).addTo(this.map);
+  // Dibuja todos los pines (solo se usa al cargar o al buscar)
+  private renderMarkers() {
+    this.markersLayer.clearLayers();
+    this.markers.clear();
+    const q = this.normalize(this.searchText.trim());
 
-    // 2. Otras cafeterías reales de Cipolletti con etiquetas
-    const places = [
-      { name: 'Barstow Coffee', mood: 'Luz Natural, Trabajo', coords: [-38.9372, -67.9940] },
-      { name: 'Café Martínez', mood: 'Clásico, Ruidoso', coords: [-38.9412, -67.9902] },
-      { name: 'Klover Café', mood: 'Tranquilo, Lectura', coords: [-38.9388, -67.9880] }
-    ];
+    this.placesService.places.forEach(place => {
+      const c = this.coords.get(place.id);
+      if (!c) return;
+      if (q && !this.matches(place, q)) return;
 
-    places.forEach(place => {
-      const labelIcon = L.divIcon({
-        className: 'custom-pin-label',
-        html: `<span>☕ ${place.name}</span>`,
-        iconSize: [120, 30],
-        iconAnchor: [60, 15]
+      const selected = this.selectedPlace?.id === place.id;
+
+      const marker = L.marker([c.lat, c.lng], {
+        icon: this.buildIcon(place, selected),
+        zIndexOffset: selected ? 1000 : 0
       });
 
-      L.marker(place.coords as L.LatLngExpression, { icon: labelIcon })
-        .addTo(this.map)
-        .bindPopup(`<b>${place.name}</b><br>${place.mood}`);
+      marker.on('click', (e: L.LeafletMouseEvent) => {
+        L.DomEvent.stopPropagation(e.originalEvent);
+        this.ngZone.run(() => this.selectPlace(place));
+      });
+
+      marker.addTo(this.markersLayer);
+      this.markers.set(place.id, marker);
     });
   }
 
-  // Funciones para botones flotantes
-  zoomIn() {
-    this.map.zoomIn();
+  // Cambia solo el aspecto de un pin, sin redibujar todos
+  private refreshMarker(place: Place | null) {
+    if (!place) return;
+    const marker = this.markers.get(place.id);
+    if (!marker) return;
+    const selected = this.selectedPlace?.id === place.id;
+    marker.setIcon(this.buildIcon(place, selected));
+    marker.setZIndexOffset(selected ? 1000 : 0);
   }
 
-  zoomOut() {
-    this.map.zoomOut();
+  // Abre la tarjeta con descripción, dirección y puntaje
+  selectPlace(place: Place) {
+    const previous = this.selectedPlace;
+    this.selectedPlace = place;
+
+    this.refreshMarker(previous);
+    this.refreshMarker(place);
+
+    const c = this.coords.get(place.id);
+    if (c) this.map?.panTo([c.lat, c.lng]);
+
+    this.cdr.detectChanges(); // fuerza a mostrar la tarjeta
   }
 
-  centerOnCipolletti() {
-    this.map.setView([-38.9398, -67.9928], 16);
+  closeCard() {
+    const previous = this.selectedPlace;
+    this.selectedPlace = null;
+    this.refreshMarker(previous);
+    this.cdr.detectChanges();
+  }
+
+  onSearchChange() {
+    this.renderMarkers();
+    const q = this.normalize(this.searchText.trim());
+    if (!q) return;
+    const found = this.placesService.places.filter(p => this.coords.has(p.id) && this.matches(p, q));
+    if (found.length === 1) this.selectPlace(found[0]);
+  }
+
+  private matches(p: Place, q: string): boolean {
+    return (
+      this.normalize(p.name).includes(q) ||
+      this.normalize(p.category).includes(q) ||
+      this.normalize(p.mood).includes(q)
+    );
+  }
+
+  private normalize(t: string) {
+    return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 }

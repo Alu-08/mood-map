@@ -1,10 +1,10 @@
-.custom-content {
+.places-content {
   --background: #FAF8EE;
 }
 
 .mood-header {
   --background: #FAF8EE;
-  padding: 12px 16px 4px 16px;
+  padding: 12px 16px 8px 16px;
 
   .header-container {
     display: flex;
@@ -75,97 +75,239 @@
   }
 }
 
-.filter-scroll {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 8px 0 16px 0;
-  scrollbar-width: none;
+.places-container {
+  padding: 16px;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 
-  .filter-chip {
-    background: #F1E59C;
-    border: 1px solid #E2D481;
-    border-radius: 12px;
-    padding: 6px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #2C2C2C;
-    white-space: nowrap;
-  }
-}
-
-.place-card {
-  background: #ffffff;
-  border-radius: 20px;
-  border: 1px solid #DCE1E8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  margin-bottom: 20px;
-  overflow: hidden;
-
-  .place-image-wrapper {
-    width: 100%;
-    height: 190px;
-    background-color: #f0f0f0;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
-  }
-
-  .place-content {
-    padding: 14px 16px;
-
-    .title-serif {
+    h2 {
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: 22px;
-      margin: 0 0 10px 0;
-      color: #6C7A9C;
-      font-weight: 500;
+      font-size: 20px;
+      color: #506180;
+      margin: 0;
+      font-weight: 700;
     }
 
-    .tags-row {
+    .filter-btn {
+      background: #ffffff;
+      border: 1px solid #C5CBD6;
+      border-radius: 18px;
+      padding: 6px 14px;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       gap: 6px;
-      margin-bottom: 8px;
+      color: #506180;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
 
-      .mood-chip {
-        background: #F1E59C;
-        border-radius: 12px;
-        padding: 4px 10px;
-        font-size: 12px;
-        color: #2C2C2C;
-        font-weight: 500;
+      &.active {
+        background: #506180;
+        color: #ffffff;
+        border-color: #506180;
       }
 
-      .btn-review {
-        background: #7E57C2;
-        color: #ffffff;
-        border: none;
-        border-radius: 12px;
-        padding: 5px 10px;
-        font-size: 11px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-left: auto;
+      .badge {
+        background: #F1E59C;
+        color: #2C2C2C;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      ion-icon {
+        font-size: 16px;
+      }
+    }
+  }
+
+  /* --- PANEL DE FILTROS --- */
+  .filter-panel {
+    background: #ffffff;
+    border: 1px solid #E1DEC8;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
+    .filter-group {
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: bold;
+        color: #506180;
+        display: block;
+        margin-bottom: 6px;
+
+      }
+
+      .chips-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        button {
+          background: #FAF8EE;
+          border: 1px solid #DCD7BD;
+          border-radius: 14px;
+          padding: 4px 10px;
+          font-size: 11px;
+          color: #4A4A4A;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &.selected {
+            background: #F1E59C;
+            border-color: #D3C363;
+            color: #2C2C2C;
+            font-weight: bold;
+          }
+        }
       }
     }
 
-    .description-text {
-      font-size: 13px;
-      color: #2C2C2C;
-      margin: 0;
-      line-height: 1.4;
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+
+      .reset-btn {
+        background: transparent;
+        border: none;
+        color: #C0392B;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  /* --- GRILLA ADAPTABLE --- */
+  .places-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    width: 100%;
+
+    @media (min-width: 900px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* --- TARJETAS PEQUEÑAS --- */
+  .place-card {
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #E3E8EE;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .card-image-box {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background: #e5e3df;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .category-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #F1E59C;
+        color: #2C2C2C;
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-size: 10px;
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+      }
+    }
+
+    .card-info {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 6px;
+        margin-bottom: 2px;
+
+        .place-title {
+          font-family: 'Playfair Display', Georgia, serif;
+          font-size: 15px;
+          color: #506180;
+          margin: 0;
+          font-weight: 600;
+          line-height: 1.2;
+        }
+
+        .rating-box {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          color: #E6A100;
+          font-weight: bold;
+          font-size: 11px;
+          flex-shrink: 0;
+
+          ion-icon {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .place-address {
+        font-size: 11px;
+        color: #888888;
+        margin: 0 0 4px 0;
+      }
+
+      .place-mood {
+        font-size: 11px;
+        color: #555555;
+        margin: 0 0 4px 0;
+      }
+
+      .place-description {
+        font-size: 11px;
+        color: #333333;
+        margin: 0;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
     }
   }
 }

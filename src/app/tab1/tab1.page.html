@@ -8,68 +8,140 @@
     <!-- Buscador -->
     <div class="search-box">
       <ion-icon name="search-outline" class="search-icon"></ion-icon>
-      <input type="text" placeholder="¿Qué mood buscás hoy?" class="search-input" />
+      <input 
+        type="text" 
+        placeholder="¿Qué mood buscás hoy?" 
+        class="search-input"
+        [(ngModel)]="searchText"
+      />
     </div>
 
-    <!-- Perfil -->
-    <div class="profile-avatar">
+    <!-- Perfil: lleva al inicio de sesión -->
+    <div class="profile-avatar" (click)="goToLogin()">
       <ion-icon name="person-outline"></ion-icon>
     </div>
   </div>
 </ion-header>
 
-<ion-content class="ion-padding custom-content">
-
-  <!-- Filtros Rápidos (Chips Superiores) -->
-  <div class="filter-scroll">
-    <div class="filter-chip">💼 Trabajo</div>
-    <div class="filter-chip">📖 Lectura</div>
-    <div class="filter-chip">🤫 Silencioso</div>
-    <div class="filter-chip">🎵 Música</div>
-  </div>
-
-  <!-- Tarjeta 1: Entre Voces -->
-  <div class="place-card">
-    <div class="place-image-wrapper">
-      <img src="assets/images/entre_voces.png" alt="Entre Voces Café Bar" />
-    </div>
+<ion-content class="places-content" [fullscreen]="true">
+  <div class="places-container">
     
-    <div class="place-content">
-      <h2 class="title-serif">Entre Voces</h2>
-      
-      <div class="tags-row">
-        <span class="mood-chip">🔊 Ruidoso</span>
-        <span class="mood-chip">👥 Mucha gente</span>
-        <span class="mood-chip">🌓 Luz neutra</span>
-        <button class="btn-review">Ver Reseñas</button>
+    <!-- Título y Botón de Filtro -->
+    <div class="section-header">
+      <h2>Lugares en Cipolletti</h2>
+      <button class="filter-btn" [class.active]="activeFiltersCount > 0" (click)="toggleFilterMenu()">
+        <ion-icon name="filter-outline"></ion-icon>
+        <span>Filtrar</span>
+        <span class="badge" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
+      </button>
+    </div>
+
+    <!-- Panel Desplegable de Filtros -->
+    <div class="filter-panel" *ngIf="showFilterMenu">
+      <!-- Categorías -->
+      <div class="filter-group">
+        <label>Categoría</label>
+        <div class="chips-row">
+          <button [class.selected]="selectedCategory === 'all'" (click)="setCategory('all')">Todos</button>
+          <button [class.selected]="selectedCategory === 'cafe'" (click)="setCategory('cafe')">☕ Café</button>
+          <button [class.selected]="selectedCategory === 'bar'" (click)="setCategory('bar')">🍺 Bar</button>
+          <button [class.selected]="selectedCategory === 'resto'" (click)="setCategory('resto')">🍽️ Restó</button>
+          <button [class.selected]="selectedCategory === 'helado'" (click)="setCategory('helado')">🍦 Helado</button>
+        </div>
       </div>
 
-      <p class="description-text">
-        El lugar tiene mucha personalidad, tiene una estética rockera. Mucha..
-      </p>
-    </div>
-  </div>
-
-  <!-- Tarjeta 2: Rincón de Coffee -->
-  <div class="place-card">
-    <div class="place-image-wrapper">
-      <img src="assets/images/rincon_de_coffee.png" alt="Rincón de Coffee" />
-    </div>
-    
-    <div class="place-content">
-      <h2 class="title-serif">Rincón de Coffee</h2>
-      
-      <div class="tags-row">
-        <span class="mood-chip">👤 Poca gente</span>
-        <span class="mood-chip">🌿 Naturaleza</span>
-        <span class="mood-chip">☀️ Luz natural</span>
-        <button class="btn-review">Ver Reseñas</button>
+      <!-- Moods -->
+      <div class="filter-group">
+        <label>Mood / Ambiente</label>
+        <div class="chips-row">
+          <button [class.selected]="selectedMood === 'all'" (click)="setMood('all')">Todos</button>
+          <button 
+            *ngFor="let mood of moodOptions" 
+            [class.selected]="selectedMood === mood" 
+            (click)="setMood(mood)">
+            {{ mood }}
+          </button>
+        </div>
       </div>
 
-      <p class="description-text">
-        Super tranquilo y con mucha luz natural. Va poca gente y su café es...
-      </p>
+      <!-- Botón de Limpiar Filtros -->
+      <div class="filter-actions" *ngIf="activeFiltersCount > 0 || searchText">
+        <button class="reset-btn" (click)="resetFilters()">
+          <ion-icon name="close-circle-outline"></ion-icon> Limpiar filtros
+        </button>
+      </div>
     </div>
+
+    <!-- Lista de Tarjetas de Lugares -->
+    <div class="places-list">
+      <div class="place-card" *ngFor="let place of filteredPlaces" (click)="openPlace(place)">
+        
+        <!-- Imagen del Lugar -->
+        <div class="card-image-box">
+          <img [src]="place.image" [alt]="place.name" onError="this.src='assets/images/moodmap_logo.png'" />
+          <span class="category-badge">{{ place.category }}</span>
+        </div>
+
+        <!-- Contenido Informativo -->
+        <div class="card-info">
+          <div class="card-header">
+            <h3 class="place-title">{{ place.name }}</h3>
+            <div class="rating-box">
+              <ion-icon name="star"></ion-icon>
+              <span>{{ place.rating }}</span>
+            </div>
+          </div>
+
+          <p class="place-address">{{ place.address }}</p>
+          <p class="place-mood"><b>Mood:</b> {{ place.mood }}</p>
+          <p class="place-description">{{ place.description }}</p>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
+  <!-- Tarjeta de detalle (queda fija sobre la lista, debajo del header) -->
+  <div slot="fixed" class="detail-overlay" *ngIf="selectedPlace as place">
+    <div class="detail-scroll">
+      <div class="detail-card">
+
+        <div class="detail-image">
+          <img [src]="place.image" [alt]="place.name" onError="this.src='assets/images/moodmap_logo.png'" />
+          <button class="detail-close" (click)="closePlace()" aria-label="Cerrar">✕</button>
+        </div>
+
+        <div class="detail-body">
+          <div class="detail-title">{{ place.name }}</div>
+
+          <div class="detail-chips">
+            <span class="detail-chip" *ngFor="let m of moodsOf(place)">{{ m }}</span>
+            <a class="detail-reviews-btn" [href]="googleReviewsUrl(place)" target="_blank" rel="noopener">Ver Reseñas</a>
+          </div>
+
+          <div class="detail-meta">{{ place.category }} · ⭐ {{ place.rating }}</div>
+          <div class="detail-address">📍 {{ place.address }}</div>
+
+          <div class="detail-desc">{{ place.longDescription || place.description }}</div>
+
+          <!-- Reseñas propias de Mood Map -->
+          <div class="detail-reviews" *ngIf="place.reviews?.length; else noReviews">
+            <div class="review" *ngFor="let r of place.reviews">
+              <div class="review-head">⭐ {{ r.rating }}<ng-container *ngIf="r.author"> · {{ r.author }}</ng-container></div>
+              <div class="review-text">{{ r.text }}</div>
+            </div>
+          </div>
+
+          <ng-template #noReviews>
+            <div class="no-reviews">
+              Todavía no hay reseñas de la comunidad Mood Map para este lugar.
+              Mientras tanto, podés ver las de Google con el botón "Ver Reseñas".
+            </div>
+          </ng-template>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </ion-content>

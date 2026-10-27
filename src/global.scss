@@ -24,6 +24,8 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import 'leaflet/dist/leaflet.css';
+
 
 /**
  * Ionic Dark Mode
@@ -193,3 +195,207 @@ ion-header.mood-header {
     display: block;
   }
 }
+
+/* ============================================================
+   MAPA (TAB 2)
+   ============================================================ */
+
+.leaflet-container { background: #FAF8EE; }
+
+/* Tiñe el mapa hacia crema/lila. Ajustá los números hasta que te guste */
+.leaflet-tile-pane {
+  filter: sepia(0.35) hue-rotate(190deg) saturate(0.75) brightness(1.05) contrast(0.9);
+}
+
+/* --- PINES --- */
+.mm-marker { background: none; border: none; }
+
+.mm-wrap {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mm-pin {
+  width: 40px;
+  height: 40px;
+  background: #8C99B3;
+  border: 2px solid #FAF8EE;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+
+  span {
+    transform: rotate(45deg);
+    font-size: 18px;
+  }
+}
+
+.mm-name {
+  margin-top: 14px;
+  background: #8C99B3;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Lugar seleccionado: se resalta en amarillo */
+.mm-active {
+  .mm-pin { background: #F1E59C; }
+  .mm-name { background: #F1E59C; color: #2C2C2C; }
+}
+/* ============================================================
+   TAB 1: TARJETA DE DETALLE
+   ============================================================ */
+
+.place-card { cursor: pointer; }
+
+.detail-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #FAF8EE;
+  display: flex;
+}
+
+.detail-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px 16px 24px;
+}
+
+.detail-card {
+  background: #FFFEF8;
+  border: 1.5px solid #C5CBD6;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 4px 0 #A9B3CE, 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+ .detail-image {
+  position: relative;
+  background: #F4F3ED;
+
+  img {
+    width: 100%;
+    height: auto;          /* respeta la proporción original de la foto */
+    max-height: 70vh;      /* evita que una foto muy vertical ocupe toda la pantalla */
+    object-fit: contain;   /* muestra la imagen entera, sin recortar */
+    display: block;
+  }
+
+  .detail-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #506180;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  }
+}
+
+
+.detail-body {
+  padding: 16px 16px 20px;
+}
+
+.detail-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: #8C99B3;
+  margin-bottom: 8px;
+}
+
+.detail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  .detail-chip {
+    background: #F1E59C;
+    border-radius: 14px;
+    padding: 4px 12px;
+    font-size: 13px;
+  }
+
+  .detail-reviews-btn {
+    margin-left: auto;
+    background: #A855F7;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+.detail-meta {
+  font-size: 14px;
+  color: #4A5568;
+  margin-bottom: 4px;
+}
+
+.detail-address {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2D3748;
+  margin-bottom: 12px;
+}
+
+.detail-desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #2D3748;
+  margin-bottom: 16px;
+}
+
+.detail-reviews .review {
+  margin-bottom: 14px;
+
+  .review-head {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2D3748;
+    margin-bottom: 2px;
+  }
+
+  .review-text {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #2D3748;
+  }
+}
+
+.no-reviews {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #718096;
+  background: #F4F3ED;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.profile-avatar { cursor: pointer; }
